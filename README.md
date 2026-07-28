@@ -216,7 +216,7 @@ jobs:
           path: savecompat-report.html
 ```
 
-The repository's own CI tests Node 20, 22, and 24 and runs formatting, linting, type checks, 35
+The repository's own CI tests Node 20, 22, and 24 and runs formatting, linting, type checks, 39
 tests, a production build, and CLI smoke tests.
 
 ## TypeScript API
