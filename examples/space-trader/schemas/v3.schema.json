@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Space Trader save v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "saveVersion",
+    "player",
+    "progression",
+    "inventory",
+    "wallet",
+    "settings",
+    "achievements",
+    "world",
+    "metadata"
+  ],
+  "properties": {
+    "saveVersion": {
+      "const": "3"
+    },
+    "player": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "progression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "experience"],
+      "properties": {
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "experience": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "inventory": {
+      "$ref": "#/definitions/inventory"
+    },
+    "wallet": {
+      "$ref": "#/definitions/wallet"
+    },
+    "settings": {
+      "$ref": "#/definitions/settings"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "world": {
+      "$ref": "#/definitions/world"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format"],
+      "properties": {
+        "format": {
+          "const": "space-trader"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "inventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "quantity"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "wallet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["credits"],
+      "properties": {
+        "credits": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["difficulty", "autosave"],
+      "properties": {
+        "difficulty": {
+          "enum": ["story", "standard", "veteran"]
+        },
+        "autosave": {
+          "type": "boolean"
+        }
+      }
+    },
+    "world": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "sector"],
+      "properties": {
+        "seed": {
+          "type": "integer"
+        },
+        "sector": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

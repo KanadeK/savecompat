@@ -1,0 +1,37 @@
+{
+  "description": "Rename progression fields and make difficulty labels player-facing.",
+  "operations": [
+    {
+      "op": "rename",
+      "from": "/progress",
+      "path": "/progression"
+    },
+    {
+      "op": "rename",
+      "from": "/progression/xp",
+      "path": "/progression/experience"
+    },
+    {
+      "op": "rename",
+      "from": "/currency",
+      "path": "/wallet"
+    },
+    {
+      "op": "map-enum",
+      "path": "/settings/difficulty",
+      "values": {
+        "easy": "story",
+        "normal": "standard",
+        "hard": "veteran"
+      },
+      "passthrough": true
+    },
+    {
+      "op": "set-default",
+      "path": "/metadata",
+      "value": {
+        "format": "space-trader"
+      }
+    }
+  ]
+}

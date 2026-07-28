@@ -1,0 +1,30 @@
+{
+  "saveVersion": "2",
+  "player": {
+    "id": "player-miner",
+    "name": "Orin"
+  },
+  "progress": {
+    "level": 8,
+    "xp": 2310
+  },
+  "inventory": [
+    {
+      "id": "crystal",
+      "name": "Phase Crystal",
+      "quantity": 4
+    }
+  ],
+  "currency": {
+    "credits": 3600
+  },
+  "settings": {
+    "difficulty": "easy",
+    "autosave": true
+  },
+  "achievements": ["first-jump", "deep-core"],
+  "world": {
+    "seed": 141421,
+    "sector": "Cobalt Belt"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "saveVersion": "3",
+  "player": {
+    "id": "player-current",
+    "name": "Sola"
+  },
+  "progression": {
+    "level": 19,
+    "experience": 11840
+  },
+  "inventory": [
+    {
+      "id": "nav-core",
+      "name": "Ancient Nav Core",
+      "quantity": 1
+    }
+  ],
+  "wallet": {
+    "credits": 22400
+  },
+  "settings": {
+    "difficulty": "veteran",
+    "autosave": false
+  },
+  "achievements": ["first-jump", "void-touched"],
+  "world": {
+    "seed": 173205,
+    "sector": "Silent Crown"
+  },
+  "metadata": {
+    "format": "space-trader"
+  }
+}

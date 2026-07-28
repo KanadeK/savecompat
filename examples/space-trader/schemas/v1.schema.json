@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Space Trader save v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["saveVersion", "player", "inventory", "coins", "world"],
+  "properties": {
+    "saveVersion": {
+      "const": "1"
+    },
+    "player": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "level", "xp"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "xp": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "inventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "qty"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "qty": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "pattern": "^-?\\d+$"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "coins": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^\\d+$"
+        }
+      ]
+    },
+    "achievements": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "world": {
+      "$ref": "#/definitions/world"
+    }
+  },
+  "definitions": {
+    "world": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "sector"],
+      "properties": {
+        "seed": {
+          "type": "integer"
+        },
+        "sector": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

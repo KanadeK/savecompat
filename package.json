@@ -1,0 +1,80 @@
+{
+  "name": "savecompat",
+  "version": "0.1.0",
+  "description": "Prove that old game saves still migrate safely before you ship.",
+  "keywords": [
+    "game-development",
+    "save-game",
+    "migration",
+    "compatibility",
+    "testing",
+    "cli",
+    "json-schema",
+    "ci"
+  ],
+  "license": "MIT",
+  "author": "Vesper <1207048080@qq.com>",
+  "type": "module",
+  "bin": {
+    "savecompat": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "schema",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KanadeK/savecompat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KanadeK/savecompat/issues"
+  },
+  "homepage": "https://github.com/KanadeK/savecompat#readme",
+  "scripts": {
+    "build": "tsup",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run smoke",
+    "demo": "npm run build && node dist/cli.js check --config examples/space-trader/savecompat.config.json --report site/index.html",
+    "dev": "tsx src/cli.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "pack:dry": "npm pack --dry-run",
+    "prepublishOnly": "npm run check",
+    "release:check": "node scripts/release-check.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "commander": "^14.0.0",
+    "fast-glob": "^3.3.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^24.1.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.32.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0",
+    "vitest": "^3.2.4"
+  }
+}

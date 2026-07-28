@@ -1,0 +1,59 @@
+{
+  "description": "Split player progression, normalize stack counts, and introduce settings.",
+  "operations": [
+    {
+      "op": "rename",
+      "from": "/player/level",
+      "path": "/progress/level"
+    },
+    {
+      "op": "rename",
+      "from": "/player/xp",
+      "path": "/progress/xp"
+    },
+    {
+      "op": "map-items",
+      "path": "/inventory",
+      "operations": [
+        {
+          "op": "coerce",
+          "path": "/qty",
+          "to": "integer"
+        },
+        {
+          "op": "clamp",
+          "path": "/qty",
+          "min": 0
+        },
+        {
+          "op": "rename",
+          "from": "/qty",
+          "path": "/quantity"
+        }
+      ]
+    },
+    {
+      "op": "coerce",
+      "path": "/coins",
+      "to": "integer"
+    },
+    {
+      "op": "rename",
+      "from": "/coins",
+      "path": "/currency/credits"
+    },
+    {
+      "op": "set-default",
+      "path": "/settings",
+      "value": {
+        "difficulty": "normal",
+        "autosave": true
+      }
+    },
+    {
+      "op": "ensure-array",
+      "path": "/achievements",
+      "mode": "wrap"
+    }
+  ]
+}

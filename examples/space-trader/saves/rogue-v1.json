@@ -1,0 +1,21 @@
+{
+  "saveVersion": "1",
+  "player": {
+    "id": "player-rogue",
+    "name": "Tavi",
+    "level": 3,
+    "xp": 410
+  },
+  "inventory": [
+    {
+      "id": "scrap",
+      "name": "Salvaged Alloy",
+      "qty": 18
+    }
+  ],
+  "coins": 720,
+  "world": {
+    "seed": 161803,
+    "sector": "Dust Meridian"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "../../schema/savecompat.config.schema.json",
+  "latestVersion": "3",
+  "versionPath": "/saveVersion",
+  "fixtures": ["saves/**/*.json"],
+  "schemas": {
+    "1": "schemas/v1.schema.json",
+    "2": "schemas/v2.schema.json",
+    "3": "schemas/v3.schema.json"
+  },
+  "migrations": [
+    {
+      "from": "1",
+      "to": "2",
+      "file": "migrations/1-to-2.json"
+    },
+    {
+      "from": "2",
+      "to": "3",
+      "file": "migrations/2-to-3.json"
+    }
+  ],
+  "preserve": [
+    {
+      "label": "Player identity",
+      "fromVersion": ["1", "2", "3"],
+      "from": "/player/id",
+      "to": "/player/id"
+    },
+    {
+      "label": "World seed",
+      "fromVersion": ["1", "2", "3"],
+      "from": "/world/seed",
+      "to": "/world/seed"
+    },
+    {
+      "label": "Experience from v1",
+      "fromVersion": "1",
+      "from": "/player/xp",
+      "to": "/progression/experience"
+    },
+    {
+      "label": "Experience from v2",
+      "fromVersion": "2",
+      "from": "/progress/xp",
+      "to": "/progression/experience"
+    },
+    {
+      "label": "Experience from v3",
+      "fromVersion": "3",
+      "from": "/progression/experience",
+      "to": "/progression/experience"
+    }
+  ],
+  "arrayKeys": {
+    "/inventory": "id"
+  },
+  "validateSource": true
+}

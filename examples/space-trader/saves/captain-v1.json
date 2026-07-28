@@ -1,0 +1,27 @@
+{
+  "saveVersion": "1",
+  "player": {
+    "id": "player-captain",
+    "name": "Mara",
+    "level": 12,
+    "xp": 4820
+  },
+  "inventory": [
+    {
+      "id": "ion-cell",
+      "name": "Ion Cell",
+      "qty": "6"
+    },
+    {
+      "id": "med-gel",
+      "name": "Med Gel",
+      "qty": 2
+    }
+  ],
+  "coins": "9250",
+  "achievements": "first-jump",
+  "world": {
+    "seed": 271828,
+    "sector": "Helix Reach"
+  }
+}
