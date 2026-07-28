@@ -1,0 +1,62 @@
+name: Bug report
+description: Report incorrect migration, validation, diff, or file behavior
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use synthetic or anonymized saves. For security-sensitive behavior, use a private security report.
+  - type: input
+    id: version
+    attributes:
+      label: SaveCompat version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command or API
+      options:
+        - doctor
+        - check
+        - migrate
+        - diff
+        - init
+        - TypeScript API
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include the command and the smallest synthetic config, migration, schema, and save.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and diagnostics
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Node 22, Windows 11
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Data safety
+      options:
+        - label: I removed player identifiers, secrets, and proprietary content.
+          required: true

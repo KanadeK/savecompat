@@ -12,7 +12,7 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ["eslint.config.js"],
+          allowDefaultProject: ["eslint.config.js", "scripts/*.mjs"],
         },
         tsconfigRootDir: import.meta.dirname,
       },
@@ -24,6 +24,22 @@ export default defineConfig(
         "error",
         { allowNumber: true, allowBoolean: true },
       ],
+    },
+  },
+  {
+    ...tseslint.configs.disableTypeChecked,
+    files: ["scripts/*.mjs"],
+    languageOptions: {
+      ...tseslint.configs.disableTypeChecked.languageOptions,
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["eslint.config.js"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
 );
