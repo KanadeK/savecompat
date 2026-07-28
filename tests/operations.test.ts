@@ -54,6 +54,18 @@ describe("migration operations", () => {
     ).toThrow(/already exists/);
   });
 
+  it("rejects moving an object into its own descendant", () => {
+    expect(() =>
+      apply({ player: { xp: 4 } }, [
+        {
+          op: "rename",
+          from: "/player",
+          path: "/player/legacy",
+        },
+      ]),
+    ).toThrow(/own descendant/);
+  });
+
   it("supports optional missing paths", () => {
     const document: JsonValue = {};
     const traces = applyOperations(document, [

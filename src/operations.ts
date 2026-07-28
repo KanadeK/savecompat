@@ -95,6 +95,13 @@ function applyMove(
   if (operation.from === operation.path) {
     return trace(operation, false, "source and target are identical");
   }
+  if (removeSource && operation.path.startsWith(`${operation.from}/`)) {
+    throw new SaveCompatError(
+      "INVALID_MOVE",
+      `Cannot move ${operation.from} into its own descendant ${operation.path}.`,
+      operation.path,
+    );
+  }
 
   const target = getAtPointer(document, operation.path);
   if (target.exists) {
@@ -196,7 +203,7 @@ function applyMapEnum(
   if (current === undefined) {
     return trace(operation, false, "target was absent (optional)");
   }
-  if (typeof current === "object") {
+  if (current !== null && typeof current === "object") {
     throw new SaveCompatError(
       "ENUM_NON_PRIMITIVE",
       `Enum target must be a primitive: ${operation.path}`,

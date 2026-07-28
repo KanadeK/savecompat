@@ -86,16 +86,6 @@ export async function migrateSave(
       }
     }
 
-    const secondPlan = planMigrations(config.latestVersion, config.latestVersion, migrations);
-    if (secondPlan.length !== 0 || !deepEqual(output, deepClone(output))) {
-      diagnostics.push({
-        severity: "error",
-        code: "NON_IDEMPOTENT",
-        message: "Migrating an already-current save was not idempotent.",
-        ...(file === undefined ? {} : { file }),
-      });
-    }
-
     return finish(diagnostics.every((diagnostic) => diagnostic.severity !== "error"));
   } catch (error) {
     diagnostics.push({
@@ -127,7 +117,16 @@ export function planMigrations(
   targetVersion: string,
   migrations: LoadedMigration[],
 ): LoadedMigration[] {
-  const bySource = new Map(migrations.map((migration) => [migration.from, migration]));
+  const bySource = new Map<string, LoadedMigration>();
+  for (const migration of migrations) {
+    if (bySource.has(migration.from)) {
+      throw new SaveCompatError(
+        "AMBIGUOUS_MIGRATION",
+        `Version ${migration.from} has multiple outgoing migrations.`,
+      );
+    }
+    bySource.set(migration.from, migration);
+  }
   const plan: LoadedMigration[] = [];
   const seen = new Set<string>();
   let current = sourceVersion;

@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { checkFixtures } from "../src/check.js";
 import { doctorConfig, loadConfig, readJsonFile } from "../src/config.js";
-import { migrateSave } from "../src/migrate.js";
+import { migrateSave, planMigrations } from "../src/migrate.js";
 
 const root = path.resolve(import.meta.dirname, "..");
 const configPath = path.join(root, "examples/space-trader/savecompat.config.json");
@@ -107,5 +107,24 @@ describe("Space Trader end-to-end corpus", () => {
     const result = await migrateSave({ saveVersion: "99" }, config);
     expect(result.passed).toBe(false);
     expect(result.diagnostics[0]?.code).toBe("MIGRATION_GAP");
+  });
+
+  it("rejects ambiguous outgoing migration edges", () => {
+    expect(() =>
+      planMigrations("1", "2", [
+        {
+          from: "1",
+          to: "2",
+          file: "a.json",
+          document: { operations: [] },
+        },
+        {
+          from: "1",
+          to: "3",
+          file: "b.json",
+          document: { operations: [] },
+        },
+      ]),
+    ).toThrow(/multiple outgoing migrations/);
   });
 });

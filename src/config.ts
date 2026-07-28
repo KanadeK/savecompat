@@ -319,6 +319,14 @@ function validateMigrationGraph(
 ): void {
   const bySource = new Map<string, LoadedMigration>();
   for (const migration of migrations) {
+    if (!(migration.to in config.schemas)) {
+      diagnostics.push({
+        severity: "error",
+        code: "MIGRATION_TARGET_SCHEMA_MISSING",
+        message: `Migration ${migration.from} -> ${migration.to} has no target schema.`,
+        file: migration.file,
+      });
+    }
     const existing = bySource.get(migration.from);
     if (existing !== undefined) {
       diagnostics.push({
@@ -392,6 +400,14 @@ function validateOperations(
       });
       return;
     }
+    if (operation.optional !== undefined && typeof operation.optional !== "boolean") {
+      diagnostics.push({
+        severity: "error",
+        code: "INVALID_OPTIONAL_FLAG",
+        message: `${location}.optional must be a boolean.`,
+        file,
+      });
+    }
     if (!("path" in operation) || typeof operation.path !== "string") {
       diagnostics.push({
         severity: "error",
@@ -404,6 +420,12 @@ function validateOperations(
     try {
       parsePointer(operation.path);
       if ("from" in operation) {
+        if (typeof operation.from !== "string") {
+          throw new SaveCompatError(
+            "INVALID_OPERATION_POINTER",
+            `${location}.from must be a string.`,
+          );
+        }
         parsePointer(operation.from);
       }
     } catch (error) {
@@ -414,17 +436,107 @@ function validateOperations(
         file,
       });
     }
-    if (operation.op === "map-items") {
-      if (!Array.isArray(operation.operations)) {
-        diagnostics.push({
-          severity: "error",
-          code: "INVALID_MAP_ITEMS",
-          message: `${location}.operations must be an array.`,
-          file,
-        });
-      } else {
-        validateOperations(operation.operations, file, diagnostics, `${location}.operations`);
-      }
+
+    switch (operation.op) {
+      case "set-default":
+      case "set":
+        if (!Object.hasOwn(operation, "value")) {
+          diagnostics.push({
+            severity: "error",
+            code: "MISSING_OPERATION_VALUE",
+            message: `${location}.value is required.`,
+            file,
+          });
+        }
+        break;
+      case "rename":
+      case "copy":
+        if (
+          operation.onConflict !== undefined &&
+          !["error", "keep-target", "overwrite"].includes(operation.onConflict)
+        ) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_CONFLICT_POLICY",
+            message: `${location}.onConflict is invalid.`,
+            file,
+          });
+        }
+        break;
+      case "coerce":
+        if (!["string", "number", "integer", "boolean"].includes(operation.to)) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_COERCE_TARGET",
+            message: `${location}.to is invalid.`,
+            file,
+          });
+        }
+        break;
+      case "clamp":
+        if (
+          (operation.min !== undefined &&
+            (typeof operation.min !== "number" || !Number.isFinite(operation.min))) ||
+          (operation.max !== undefined &&
+            (typeof operation.max !== "number" || !Number.isFinite(operation.max))) ||
+          (operation.min === undefined && operation.max === undefined)
+        ) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_CLAMP",
+            message: `${location} needs finite numeric min, max, or both.`,
+            file,
+          });
+        } else if (
+          operation.min !== undefined &&
+          operation.max !== undefined &&
+          operation.min > operation.max
+        ) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_CLAMP_RANGE",
+            message: `${location}.min cannot exceed max.`,
+            file,
+          });
+        }
+        break;
+      case "map-enum":
+        if (
+          !isRecord(operation.values) ||
+          (operation.passthrough !== undefined && typeof operation.passthrough !== "boolean")
+        ) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_ENUM_MAP",
+            message: `${location}.values must be an object and passthrough must be a boolean.`,
+            file,
+          });
+        }
+        break;
+      case "ensure-array":
+        if (operation.mode !== undefined && !["wrap", "empty"].includes(operation.mode)) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_ARRAY_MODE",
+            message: `${location}.mode must be "wrap" or "empty".`,
+            file,
+          });
+        }
+        break;
+      case "map-items":
+        if (!Array.isArray(operation.operations)) {
+          diagnostics.push({
+            severity: "error",
+            code: "INVALID_MAP_ITEMS",
+            message: `${location}.operations must be an array.`,
+            file,
+          });
+        } else {
+          validateOperations(operation.operations, file, diagnostics, `${location}.operations`);
+        }
+        break;
+      case "delete":
+        break;
     }
   });
 }
